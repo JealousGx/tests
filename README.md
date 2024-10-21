@@ -6,6 +6,22 @@ This project implements a dynamic question assignment system where questions are
 
 Let’s assume you have N questions stored in a database, and each question needs to be assigned to a specific cycle. Each cycle spans 1 week, after which a new question is assigned to the next cycle. The question assignments are region-specific, meaning users in different regions receive different questions. For example, users in Singapore get question X, while users in the US receive question Y. All users in the same region will get the same question.
 
+### Pros:
+
+Scalability: Serverless functions and DynamoDB provide auto-scaling, making it easy to handle millions of users without over-provisioning resources.
+Flexibility: Cycle durations are configurable, and questions can be easily rotated based on the current cycle.
+Cost Efficiency: Pay-per-use model of AWS Lambda and DynamoDB ensures cost savings compared to maintaining a full-fledged server.
+
+### Cons:
+
+Cold Starts: AWS Lambda cold starts might slightly affect performance for the first user request, though mitigated by proper warm-up techniques.
+Consistency: DynamoDB offers eventual consistency, which may cause a slight delay in question availability after a cycle change.
+
+### Enhancements:
+
+Cache Layer: Implementing a caching layer using AWS ElastiCache (Redis) to store recently assigned questions could further improve performance.
+Analytics: A separate analytics pipeline could be added to monitor question assignments and user activity, ensuring the system runs efficiently across all regions.
+
 ## API Endpoints
 
 ### Add Question
