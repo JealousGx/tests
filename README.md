@@ -11,6 +11,7 @@ Let’s assume you have N questions stored in a database, and each question need
 Scalability: Serverless functions and DynamoDB provide auto-scaling, making it easy to handle millions of users without over-provisioning resources.
 
 Flexibility: Cycle durations are configurable, and questions can be easily rotated based on the current cycle.
+
 Cost Efficiency: Pay-per-use model of AWS Lambda and DynamoDB ensures cost savings compared to maintaining a full-fledged server.
 
 ### Cons:
