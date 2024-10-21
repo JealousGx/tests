@@ -9,17 +9,20 @@ Let’s assume you have N questions stored in a database, and each question need
 ### Pros:
 
 Scalability: Serverless functions and DynamoDB provide auto-scaling, making it easy to handle millions of users without over-provisioning resources.
+
 Flexibility: Cycle durations are configurable, and questions can be easily rotated based on the current cycle.
 Cost Efficiency: Pay-per-use model of AWS Lambda and DynamoDB ensures cost savings compared to maintaining a full-fledged server.
 
 ### Cons:
 
 Cold Starts: AWS Lambda cold starts might slightly affect performance for the first user request, though mitigated by proper warm-up techniques.
+
 Consistency: DynamoDB offers eventual consistency, which may cause a slight delay in question availability after a cycle change.
 
 ### Enhancements:
 
 Cache Layer: Implementing a caching layer using AWS ElastiCache (Redis) to store recently assigned questions could further improve performance.
+
 Analytics: A separate analytics pipeline could be added to monitor question assignments and user activity, ensuring the system runs efficiently across all regions.
 
 ## API Endpoints
