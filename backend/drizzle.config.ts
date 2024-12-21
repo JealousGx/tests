@@ -14,7 +14,7 @@ export default defineConfig({
     user: config.database.username,
     password: config.database.password,
     database: config.database.database,
-    ssl: false,
+    ssl: true,
   } as any,
   strict: true,
 }) satisfies Config;

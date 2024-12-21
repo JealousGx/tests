@@ -5,6 +5,8 @@ import configuration from './configuration';
 
 const config = configuration();
 
+console.log(config);
+
 const pool = new Pool({
   host: config.database.host,
   port: config.database.port,
