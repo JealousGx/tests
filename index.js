@@ -1,6 +1,7 @@
 const allPagesCheckbox = document.getElementById("all-pages");
 const pageCheckboxes = document.querySelectorAll(".page-checkbox");
 
+// func to update the visual state of a checkbox by managing CSS classes
 function setCheckboxState(checkbox, state) {
   checkbox.classList.remove(
     "hover-unchecked",
@@ -15,6 +16,7 @@ function setCheckboxState(checkbox, state) {
   }
 }
 
+// func to handle mouse events for custom checkbox visual feedback
 function handleCheckboxEvents(checkbox) {
   let isPressed = false;
 
@@ -72,24 +74,30 @@ function handleCheckboxEvents(checkbox) {
 
 [allPagesCheckbox, ...pageCheckboxes].forEach(handleCheckboxEvents);
 
+// Event listener for "All Pages" checkbox
 allPagesCheckbox.addEventListener("click", () => {
   const isChecked = allPagesCheckbox.indeterminate
     ? false
     : allPagesCheckbox.checked;
+
   pageCheckboxes.forEach((checkbox) => {
     checkbox.checked = !isChecked;
     setCheckboxState(checkbox, checkbox.checked ? "checked-out" : null);
   });
+
   allPagesCheckbox.checked = !isChecked;
+
   updateAllPagesCheckbox();
 });
 
+// Event listeners for individual page checkboxes
 pageCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener("change", () => {
     updateAllPagesCheckbox();
   });
 });
 
+// Function to update the "All Pages" checkbox state based on individual checkboxes
 function updateAllPagesCheckbox() {
   const numChecked = [...pageCheckboxes].filter(
     (checkbox) => checkbox.checked
