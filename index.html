@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dropdown Options Component</title>
+
+    <meta
+      name="description"
+      content="A dropdown options component with custom checkboxes."
+    />
+    <meta
+      name="keywords"
+      content="HTML,CSS,JavaScript,Dropdown,Checkboxes,UI Component"
+    />
+
+    <meta name="author" content="JealousGx" />
+    <meta name="author-url" content="https://jealous.dev" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background-color: white;
+        border-radius: 4px;
+        padding: 24px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+        width: 370px;
+      }
+
+      .list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+      }
+
+      .list-item:first-child {
+        padding-top: 0;
+        border-bottom: 1px solid #cdcdcd;
+      }
+
+      .list-item:last-child {
+        border-bottom: 1px solid #cdcdcd;
+        padding-bottom: 24px;
+      }
+
+      .list-item label {
+        font-size: 16px;
+        color: #333333;
+        cursor: pointer;
+      }
+
+      .checkbox {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+        background-color: white;
+      }
+
+      .checkbox::before {
+        content: "";
+        display: none;
+        width: 7px;
+        height: 15px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 0px;
+        left: 8px;
+      }
+
+      .checkbox.hover-unchecked {
+        border: 1px solid #bdbdbd;
+      }
+
+      .checkbox.pressing-unchecked {
+        border: 1px solid #bdbdbd;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.3);
+      }
+
+      .checkbox.pressing-unchecked::before {
+        display: block;
+        border-color: #878787;
+      }
+
+      .checkbox.clicked-unchecked {
+        border: 1px solid #bdbdbd;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.3);
+      }
+
+      .checkbox.clicked-unchecked::before {
+        display: block;
+        border-color: #878787;
+      }
+
+      .checkbox.checked-out {
+        background-color: #5087f8;
+        border: none;
+      }
+
+      .checkbox.checked-out::before {
+        display: block;
+        border-color: white;
+      }
+
+      .checkbox.checked-hover {
+        background-color: #2469f6;
+        border: none;
+      }
+
+      .checkbox.checked-hover::before {
+        display: block;
+        border-color: white;
+      }
+
+      .checkbox.checked-pressing {
+        background-color: #2469f6;
+        border: none;
+        box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.3);
+      }
+
+      .checkbox.checked-pressing::before {
+        display: block;
+        border-color: white;
+      }
+
+      .checkbox.intermediate {
+        background-color: #2f80ed;
+        border-color: #2f80ed;
+      }
+
+      .checkbox.intermediate::before {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 2px;
+        background-color: white;
+        position: absolute;
+        top: 10px;
+        left: 7px;
+        transform: none;
+        border: none;
+      }
+
+      .button {
+        background-color: #ffce22;
+        border: none;
+        border-radius: 4px;
+        padding: 11px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333333;
+        cursor: pointer;
+        margin-top: 24px;
+        transition: background-color 0.2s ease;
+      }
+
+      .button:hover {
+        background-color: #ffd84d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <ul class="list">
+        <li class="list-item">
+          <label for="all-pages">All pages</label>
+          <input type="checkbox" class="checkbox" id="all-pages" />
+        </li>
+        <li class="list-item">
+          <label for="page-1">Page 1</label>
+          <input type="checkbox" class="checkbox page-checkbox" id="page-1" />
+        </li>
+        <li class="list-item">
+          <label for="page-2">Page 2</label>
+          <input type="checkbox" class="checkbox page-checkbox" id="page-2" />
+        </li>
+        <li class="list-item">
+          <label for="page-3">Page 3</label>
+          <input type="checkbox" class="checkbox page-checkbox" id="page-3" />
+        </li>
+        <li class="list-item">
+          <label for="page-4">Page 4</label>
+          <input type="checkbox" class="checkbox page-checkbox" id="page-4" />
+        </li>
+      </ul>
+      <button class="button">Done</button>
+    </div>
+
+    <script>
+      const allPagesCheckbox = document.getElementById("all-pages");
+      const pageCheckboxes = document.querySelectorAll(".page-checkbox");
+
+      function setCheckboxState(checkbox, state) {
+        checkbox.classList.remove(
+          "hover-unchecked",
+          "pressing-unchecked",
+          "clicked-unchecked",
+          "checked-out",
+          "checked-hover",
+          "checked-pressing"
+        );
+        if (state) {
+          checkbox.classList.add(state);
+        }
+      }
+
+      function handleCheckboxEvents(checkbox) {
+        let isPressed = false;
+
+        checkbox.addEventListener("mousedown", () => {
+          isPressed = true;
+          if (checkbox.checked) {
+            setCheckboxState(checkbox, "checked-pressing");
+          } else {
+            setCheckboxState(checkbox, "pressing-unchecked");
+          }
+        });
+
+        checkbox.addEventListener("mouseup", () => {
+          isPressed = false;
+          if (checkbox.checked) {
+            setCheckboxState(checkbox, "checked-hover");
+          } else {
+            setCheckboxState(checkbox, "clicked-unchecked");
+          }
+        });
+
+        checkbox.addEventListener("mouseover", () => {
+          if (isPressed) {
+            if (checkbox.checked) {
+              setCheckboxState(checkbox, "checked-pressing");
+            } else {
+              setCheckboxState(checkbox, "pressing-unchecked");
+            }
+          } else {
+            if (checkbox.checked) {
+              setCheckboxState(checkbox, "checked-hover");
+            } else {
+              setCheckboxState(checkbox, "hover-unchecked");
+            }
+          }
+        });
+
+        checkbox.addEventListener("mouseout", () => {
+          if (checkbox.checked) {
+            setCheckboxState(checkbox, "checked-out");
+          } else {
+            setCheckboxState(checkbox, null);
+          }
+        });
+
+        checkbox.addEventListener("click", () => {
+          if (checkbox.checked) {
+            setCheckboxState(checkbox, "checked-out");
+          } else {
+            setCheckboxState(checkbox, null);
+          }
+          updateAllPagesCheckbox();
+        });
+      }
+
+      [allPagesCheckbox, ...pageCheckboxes].forEach(handleCheckboxEvents);
+
+      allPagesCheckbox.addEventListener("click", () => {
+        const isChecked = allPagesCheckbox.indeterminate
+          ? false
+          : allPagesCheckbox.checked;
+        pageCheckboxes.forEach((checkbox) => {
+          checkbox.checked = !isChecked;
+          setCheckboxState(checkbox, checkbox.checked ? "checked-out" : null);
+        });
+        allPagesCheckbox.checked = !isChecked;
+        updateAllPagesCheckbox();
+      });
+
+      pageCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          updateAllPagesCheckbox();
+        });
+      });
+
+      function updateAllPagesCheckbox() {
+        const numChecked = [...pageCheckboxes].filter(
+          (checkbox) => checkbox.checked
+        ).length;
+        allPagesCheckbox.checked = numChecked === pageCheckboxes.length;
+        allPagesCheckbox.indeterminate =
+          numChecked > 0 && numChecked < pageCheckboxes.length;
+        if (allPagesCheckbox.indeterminate) {
+          allPagesCheckbox.classList.add("intermediate");
+        } else {
+          allPagesCheckbox.classList.remove("intermediate");
+        }
+      }
+    </script>
+  </body>
+</html>
