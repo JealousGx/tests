@@ -1,4 +1,9 @@
+import { config } from "dotenv";
 import { WebSocketServer } from "ws";
+
+import { processAudioAndTranslate } from "./actions";
+
+config();
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -6,29 +11,54 @@ console.log("WebSocket server is running on ws://localhost:8080");
 
 wss.on("connection", function connection(ws) {
   console.log("new client connected");
+  let isProcessing = false;
 
   ws.on("error", (err) => {
     console.error("WebSocket error:", err);
   });
 
-  ws.on("message", function message(clientMessage: Buffer) {
+  ws.on("message", async (clientMessage: Buffer) => {
     try {
       const data = JSON.parse(clientMessage.toString());
 
       if (data.type === "audio") {
-        const { audioDataUri } = data.payload;
+        if (isProcessing) {
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: "Still processing previous audio; please wait.",
+            })
+          );
+          return;
+        }
 
-        // Here you would process the audio data (e.g., transcription and translation)
+        isProcessing = true;
+
+        const { audioDataUri, targetLanguage } = data.payload;
+
         console.log("Received audio data");
 
-        // For demonstration, we send back a mock translation response
-        const response = {
-          type: "translation",
-          transcribedText: "This is a transcribed text.",
-          translatedText: "Ceci est un texte transcrit.",
-        };
+        const result = await processAudioAndTranslate({
+          audioDataUri,
+          targetLanguage,
+        });
 
-        ws.send(JSON.stringify(response));
+        if (result.error) {
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: result.error,
+            })
+          );
+          return;
+        }
+
+        ws.send(
+          JSON.stringify({
+            type: "translation",
+            data: result.data,
+          })
+        );
       }
     } catch (err) {
       console.error("Error processing message:", err);
@@ -42,6 +72,8 @@ wss.on("connection", function connection(ws) {
       }
 
       ws.send(JSON.stringify(errorResponse));
+    } finally {
+      isProcessing = false;
     }
   });
 
