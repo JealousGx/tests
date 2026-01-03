@@ -15,6 +15,11 @@ pnpm ws:dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Videos
+
+- [Video 1 (Building Live Translation WebApp With Mocked Response)](https://youtu.be/pJZt8tCGde0)
+- [Video 2 (Implementing AI for actual transcription and translation)](https://youtu.be/fkXJYKUv4Ck)
+
 ## Assumptions and Trade-offs
 
 Here are some key assumptions and trade offs made in this project:
