@@ -3,6 +3,7 @@
 import { LoaderIcon, Mic, Square } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import TargetLanguageSelector from "@/components/language-selector";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/card";
 
 const WEBSOCKET_URL = "ws://localhost:8080";
+const RECORDING_INTERVAL_MS = 5_000; // 5 seconds
 
 export default function Home() {
   const [transcribedText, setTranscribedText] = useState("What you said");
@@ -23,6 +25,7 @@ export default function Home() {
   const [hasPermission, setHasPermission] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState("english");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -54,9 +57,9 @@ export default function Home() {
       const data = JSON.parse(event.data);
 
       if (data.type === "translation") {
-        if (data.transcribedText) setTranscribedText(data.transcribedText);
+        if (data.data.transcribedText) setTranscribedText(data.data.transcribedText);
 
-        if (data.translatedText) setTranslatedText(data.translatedText);
+        if (data.data.translatedText) setTranslatedText(data.data.translatedText);
       } else if (data.type === "error") {
         console.log("Error from server:", data.message);
         setTranscribedText((prev) => `${prev} [Error: ${data.message}]`);
@@ -72,7 +75,7 @@ export default function Home() {
       console.log("WebSocket closed");
       if (isRecording) stopRecording();
     };
-  }, [isRecording, stopRecording]);
+  }, []);
 
   useEffect(() => {
     connectWebSocket();
@@ -101,6 +104,7 @@ export default function Home() {
             type: "audio",
             payload: {
               audioDataUri: base64audio,
+              targetLanguage,
             },
           })
         );
@@ -109,7 +113,7 @@ export default function Home() {
         setIsProcessing(false);
       }
     };
-  }, []);
+  }, [targetLanguage]);
 
   const startRecording = useCallback(async () => {
     console.log("Recording started...");
@@ -145,7 +149,7 @@ export default function Home() {
         }
       };
 
-      mediaRecorder.start(250);
+      mediaRecorder.start(RECORDING_INTERVAL_MS);
       setIsRecording(true);
     } catch (err) {
       console.error("Microphone access denied or error:", err);
@@ -189,6 +193,11 @@ export default function Home() {
           <CardDescription className="text-lg">
             Real time Voice Translation Using AI
           </CardDescription>
+
+          <div className="flex justify-center mt-4">
+
+            <TargetLanguageSelector value={targetLanguage} onValueChange={setTargetLanguage} isDisabled={isRecording} />
+          </div>
         </CardHeader>
 
         <CardContent className="p-6 space-y-6">
@@ -226,7 +235,7 @@ export default function Home() {
               <Mic className="w-8 h-8" />
             )}
           </Button>
-          <p text-sm>
+          <p>
             {!hasPermission
               ? "Tap to request mic permission"
               : isRecording
